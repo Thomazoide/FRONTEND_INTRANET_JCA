@@ -1,0 +1,1 @@
+export const LOGO_ESCUDO = "https://jcasecurity.cl/assets/images/escudo.webp"
