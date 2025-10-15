@@ -11,7 +11,7 @@ export function GetRequestConfig(method: METHODS, type?: "JSON" | "FORM", body?:
         method,
         headers: {
             "Content-Type": type === "JSON" ? "application/json" : "multipart/form-data",
-            "Authorization": token || ""
+            "Authorization": `Bearer ${token}` || ""
         },
         body
     }

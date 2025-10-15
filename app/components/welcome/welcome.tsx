@@ -7,8 +7,8 @@ import { GetRequestConfig, METHODS } from "~/constants/requestsConfig";
 import type { loginSuccessPayload } from "~/types/payloads";
 
 export function Welcome() {
-  const rut = useRef<HTMLInputElement>(null)
-  const password = useRef<HTMLInputElement>(null)
+  const rut = useRef<HTMLInputElement>(null);
+  const password = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const onRutChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +31,7 @@ export function Welcome() {
       //CREAR CONTEXTO PARA GUARDAR DATOS DEL USUARIO LOGEADO Y TOKEN DE ACCESO...
     } catch(err) {
       setErrorMessage((err as Error).message);
-      return
+      return;
     }
   }
 

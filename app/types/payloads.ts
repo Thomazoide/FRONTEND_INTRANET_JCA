@@ -20,3 +20,7 @@ export interface accountRequest {
     rut: string;
     email: string;
 }
+
+export interface validateTokenPayload {
+    token: string;
+}
