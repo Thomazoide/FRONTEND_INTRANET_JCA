@@ -1,3 +1,5 @@
+import type { Feriado } from "./models";
+
 export interface responsePayload<T> {
     statusCode: number;
     message: string;
@@ -8,7 +10,8 @@ export interface responsePayload<T> {
 export interface loginSuccessPayload {
     message: string;
     statusCode: number;
-    token: string;
+    token?: string;
+    error?: string;
 }
 
 export interface loginPayload {
@@ -23,4 +26,9 @@ export interface accountRequest {
 
 export interface validateTokenPayload {
     token: string;
+}
+
+export interface ListaFeriados {
+    status: string; //mensaje que indica si la request fue exitosa o no}
+    data: Feriado[];
 }

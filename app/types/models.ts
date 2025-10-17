@@ -54,3 +54,17 @@ export interface LiquidationRequest {
     completada: boolean;
     userID: number;
 }
+
+export interface Feriado {
+    date: string; //fecha en formato YYYY-MM-DD
+    title: string;
+    type: "Civil" | "Religioso";
+    inaleniable: boolean; //Irrenunciable: si/no
+    extra: string; //Info extra del feriado, bastante irrelevante.
+}
+
+export interface BirthdayInfo {
+    userID: number; //ID del usuario en BBDD
+    fullName: string; //Nombre completo de la persona de cumpleaños
+    date: string; //Fecha del cumpleaños en formato YYYY-MM-DD
+}

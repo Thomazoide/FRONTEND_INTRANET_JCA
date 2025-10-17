@@ -1,0 +1,1 @@
+export const USER_DATA_STORAGE = "usr.data";

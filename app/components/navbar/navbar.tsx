@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { NavLink } from "react-router";
 import { File, Files, Bell, Users, UserCog2, DoorOpen, Home, type LucideProps } from "lucide-react";
-import type { CARGO } from "~/types/models";
+import { CARGO } from "~/types/models";
 
 
 type NavItem = {
@@ -21,12 +21,28 @@ const NAV_ITEMS: NavItem[] = [
   { tipo: 1, label: "Cerrar sesión", path: "/logout", icon: DoorOpen },
 ];
 
-export default function NavBar(props: {cargo: CARGO}) {
+export default function NavBar({ cargo }: { cargo: CARGO }) {
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const toggleLabel = useMemo(
         () => (collapsed ? "Expandir menú" : "Contraer Menú"),
         [collapsed]
     );
+
+    const visibleNavItems = useMemo(() =>
+        NAV_ITEMS.filter((item) => {
+            if (item.tipo === 1) {
+                return true;
+            }
+            if (item.tipo === 2) {
+                return cargo === CARGO.RRHH;
+            }
+            if (item.tipo === 3) {
+                return cargo === CARGO.SUPERVISOR;
+            }
+            return false;
+        }),
+    [cargo]);
+
     return (
         <aside
         className={`flex h-screen flex-col bg-yellow-400 text-blue-900 shadow-xl transition-[width] duration-300 ${collapsed ? "w-20" : "w-64"}`}
@@ -41,7 +57,7 @@ export default function NavBar(props: {cargo: CARGO}) {
                 {!collapsed && <span>{toggleLabel}</span>}
             </button>
             <nav className="flex flex-1 flex-col gap-2 overflow-hidden px-3 py-4">
-                {NAV_ITEMS.map( (item) => (
+                {visibleNavItems.map( (item) => (
                     <NavLink
                     key={item.path}
                     to={item.path}
@@ -51,7 +67,7 @@ export default function NavBar(props: {cargo: CARGO}) {
                         isActive ?
                         "bg-blue-900 text-yellow-200 shadow-inner"
                         :
-                        "hover:bg-blue-900/10 focus-visible:outline-2 focus-visible:outline-blue-900/60"
+                        "hover:bg-blue-900/10 focus-visible:ring-2 focus-visible:ring-blue-900/60 focus-visible:ring-offset-2 focus-visible:ring-offset-yellow-300"
                     ].join(" ")}
                     >
                         <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-900/20 text-base font-semibold ${collapsed ? "" : "bg-blue-900/10"}`}>

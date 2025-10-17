@@ -9,4 +9,5 @@ export const ENDPOINTS = {
     liquidationsEndpoint: (id: number) => `${BACKENDURL}/documentos/${id}/liquidaciones`, // SOLO GET Y POST
     usersEndpoint: `${BACKENDURL}/usuarios`, // SOLO GET, PUT Y POST
     usersWithParamsEndpoint: (id: number) => `${BACKENDURL}/usuarios/${id}`, // SOLO GET Y DELETE
+    holidays: "https://api.boostr.cl/holidays.json" // SOLO GET, API PARA OBTENER LOS FERIADOS EN EL FORMATO "ListaFeriados del archivo payloads.ts"
 }

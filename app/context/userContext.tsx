@@ -1,10 +1,11 @@
-import { createContext, useEffect, useReducer, useState, type Dispatch, type FC, type ReactElement, type ReactNode, } from "react";
+import { jwtDecode, type JwtPayload } from "jwt-decode";
+import { createContext, useContext, useEffect, useMemo, useReducer, useState, type ActionDispatch, type Dispatch, type FC, type ReactElement, type ReactNode, } from "react";
 import { ENDPOINTS } from "~/constants/endpoints";
 import { GetRequestConfig, METHODS } from "~/constants/requestsConfig";
 import type { User } from "~/types/models";
 import type { responsePayload, validateTokenPayload } from "~/types/payloads";
 
-enum actionTypes {
+export enum actionTypes {
     LOGIN = "LOGIN",
     LOGOUT = "LOGOUT"
 }
@@ -22,7 +23,7 @@ const estadoInicial: State = {
     user: null
 };
 
-export const STORAGE_KEY  ="jca.web.token"
+export const STORAGE_KEY  ="jca.web.token";
 
 const authReducer = (state: State, action: Action): State => {
     switch(action.type) {
@@ -45,10 +46,44 @@ export const AuthContext = createContext<{state: State; dispatch: Dispatch<Actio
 
 export const AuthContextProvider = ({children}: Readonly<{children: ReactNode}>): ReactElement => {
     const [state, dispatch] = useReducer(authReducer, estadoInicial);
-    useEffect( () => {}, [] )
+    const checkAccessToken = async function() {
+        const token = localStorage.getItem(STORAGE_KEY);
+        if(token){
+            const body: validateTokenPayload = {
+                token
+            }
+            const result = await validateSession(body);
+            if(!result){
+                dispatch({type: actionTypes.LOGOUT});
+                return;
+            }
+            const decodedToken: User = JSON.parse(jwtDecode<JwtPayload>(token).sub!);
+            dispatch({type: actionTypes.LOGIN, payload: decodedToken});
+        }
+        dispatch({type: actionTypes.LOGOUT});
+        return;
+    }
+    useEffect( () => {
+        checkAccessToken();
+    }, [] )
+    const memoizedValue = useMemo<{
+        state: State,
+        dispatch: ActionDispatch<[action: Action]>
+    }>( () => ({
+        state,
+        dispatch
+    }), [state, dispatch] )
     return(
-        <AuthContext.Provider value={{state, dispatch}}>
+        <AuthContext.Provider value={memoizedValue}>
             {children}
         </AuthContext.Provider>
     )
+}
+
+export function useAuthContext() {
+    const context = useContext(AuthContext);
+    if(!context) {
+        throw new Error("Este hook debe usarse dentro de las etiquetas del provider");
+    }
+    return context;
 }
